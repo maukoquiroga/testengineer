@@ -1,4 +1,5 @@
 require "testengineer/version"
+require 'timeout'
 require 'foreman/engine'
 
 module TestEngineer
@@ -27,6 +28,10 @@ module TestEngineer
       puts "Foreman hasn't been started, whoops"
       return
     end
+
+    if name.nil?
+      raise Exception, 'TestEngineer#stop_process cannot handle a nil process name'
+    end
     procs = foreman.send(:running_processes)
     procs.each do |pid, p|
       parts = p.name.split('.')
@@ -34,7 +39,7 @@ module TestEngineer
         next
       end
       p.kill 'SIGTERM'
-      Timeout.timeout(5) do
+      ::Timeout.timeout(5) do
         begin
           Process.waitpid(pid)
         rescue Errno::ECHILD

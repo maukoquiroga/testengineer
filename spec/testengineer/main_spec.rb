@@ -22,6 +22,48 @@ describe TestEngineer do
   end
 
   describe '#stop_process' do
+    before :each do
+      subject.stub(:foreman).and_return(foreman)
+    end
+    context 'no running processes' do
+      before :each do
+        foreman.stub(:running_processes).and_return([])
+      end
+
+      it 'do nothing and reset Foreman::Engine.terminating' do
+        foreman.should_receive(:instance_variable_set).with(:@terminating, false)
+        subject.stop_process('foreman')
+      end
+
+      it 'should raise an error on a nil name argument' do
+        expect {
+          subject.stop_process(nil)
+        }.to raise_error
+      end
+    end
+    context 'running processes' do
+      let(:process) { double('Foreman::Process') }
+      before :each do
+        process.stub(:name).and_return('mock.1')
+        foreman.stub(:running_processes).and_return([[1, process]])
+      end
+
+      it 'should not stop unmatched names' do
+        process.should_not_receive(:kill)
+        subject.stop_process('foreman')
+      end
+
+      it 'should not stop partially matched names' do
+        process.should_not_receive(:kill)
+        subject.stop_process('mockery')
+      end
+
+      it 'should stop matching named processes' do
+        process.should_receive(:kill)
+        Process.stub(:waitpid).and_return(true)
+        subject.stop_process('mock')
+      end
+    end
   end
 
   describe '#start_stack' do
