@@ -1,8 +1,8 @@
 Around('@testengineer') do |scenario, block|
-  start_stack
+  TestEngineer.start_stack
   begin
     block.call
   ensure
-    stop_stack
+    TestEngineer.stop_stack
   end
 end

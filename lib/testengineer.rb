@@ -1,7 +1,8 @@
 require "testengineer/version"
+require 'foreman/engine'
 
 module TestEngineer
-  def wait_for_socket(host='localhost', port=nil)
+  def self.wait_for_socket(host='localhost', port=nil)
     return if port.nil?
 
     puts "Waiting for server at #{host}:#{port} to come online.."
@@ -17,7 +18,7 @@ module TestEngineer
     end
   end
 
-  def stop_process(name)
+  def self.stop_process(name)
     if $foreman.nil?
       puts "Foreman hasn't been started, whoops"
       return
@@ -41,19 +42,19 @@ module TestEngineer
     $foreman.instance_variable_set(:@terminating, false)
   end
 
-  def start_stack
+  def self.start_stack
     procfile = File.expand_path(Dir.pwd + '/Procfile')
     unless File.exists? procfile
       raise StandardError, 'Procfile does not exist!'
     end
-    $foreman = Foreman::Engine.new(procfile, {})
+    $foreman = ::Foreman::Engine.new(procfile, {})
 
     Thread.new do
       $foreman.start
     end
   end
 
-  def stop_stack
+  def self.stop_stack
     $foreman.send(:terminate_gracefully) unless $foreman.nil?
     $foreman = nil
   end

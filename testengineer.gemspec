@@ -14,4 +14,8 @@ Gem::Specification.new do |gem|
   gem.name          = "testengineer"
   gem.require_paths = ["lib"]
   gem.version       = TestEngineer::VERSION
+
+  gem.add_dependency 'foreman'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
 end
