@@ -1,6 +1,8 @@
 # TestEngineer
 
 
+[![Build Status](https://buildhive.cloudbees.com/job/lookout/job/testengineer/badge/icon)](https://buildhive.cloudbees.com/job/lookout/job/testengineer/)
+
 TestEngineer is a simple gem which adds some code around
 [foreman](https://github.com/ddollar/foreman) for integration testing.
 
