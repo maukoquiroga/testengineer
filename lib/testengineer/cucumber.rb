@@ -1,3 +1,5 @@
+require 'testengineer'
+
 Around('@testengineer') do |scenario, block|
   TestEngineer.start_stack
   begin
