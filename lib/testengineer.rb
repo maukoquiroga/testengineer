@@ -64,7 +64,11 @@ module TestEngineer
   end
 
   def self.stop_stack
-    foreman.send(:terminate_gracefully) unless foreman.nil?
+    begin
+      foreman.send(:terminate_gracefully) unless foreman.nil?
+    rescue Errno::ECHILD => e
+      # Children terminated before we could kill them, no big deal
+    end
     foreman = nil
   end
 end

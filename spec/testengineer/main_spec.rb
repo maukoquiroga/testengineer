@@ -76,10 +76,24 @@ describe TestEngineer do
       subject.stop_stack
     end
 
-    it 'should invoke #terminate_gracefully if foreman exists' do
-      foreman.should_receive(:terminate_gracefully)
-      subject.stub(:foreman).and_return(foreman)
-      subject.stop_stack
+    context 'with a stubbed foreman' do
+      before :each do
+        subject.stub(:foreman).and_return(foreman)
+      end
+
+      it 'should invoke #terminate_gracefully if foreman exists' do
+        foreman.should_receive(:terminate_gracefully)
+        subject.stop_stack
+      end
+
+      it 'should catch and hide ECHILD gracefully' do
+        foreman.stub(:terminate_gracefully) do
+          raise Errno::ECHILD
+        end
+
+        expect { subject.stop_stack }.not_to raise_error(Errno::ECHILD)
+      end
     end
+
   end
 end
