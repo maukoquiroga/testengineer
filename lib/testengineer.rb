@@ -3,6 +3,10 @@ require 'timeout'
 require 'foreman/engine'
 
 module TestEngineer
+  class << self
+    attr_accessor :procfile
+  end
+
   def self.foreman
     $foreman
   end
@@ -52,7 +56,7 @@ module TestEngineer
   end
 
   def self.start_stack
-    procfile = File.expand_path(Dir.pwd + '/Procfile')
+    procfile = File.expand_path(self.procfile, Dir.pwd)
     unless File.exists? procfile
       raise StandardError, 'Procfile does not exist!'
     end
