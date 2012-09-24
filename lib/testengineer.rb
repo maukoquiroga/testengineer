@@ -7,6 +7,8 @@ module TestEngineer
     attr_accessor :procfile
   end
 
+  self.procfile = 'Procfile'
+
   def self.foreman
     $foreman
   end
