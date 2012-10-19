@@ -1,6 +1,6 @@
 require "testengineer/version"
 require 'timeout'
-require 'foreman/engine'
+require 'foreman/engine/cli'
 
 module TestEngineer
   def self.foreman
@@ -56,7 +56,8 @@ module TestEngineer
     unless File.exists? procfile
       raise StandardError, 'Procfile does not exist!'
     end
-    $foreman = ::Foreman::Engine.new(procfile, {})
+    $foreman = ::Foreman::Engine::CLI.new
+    foreman.load_procfile(procfile)
 
     Thread.new do
       foreman.start
